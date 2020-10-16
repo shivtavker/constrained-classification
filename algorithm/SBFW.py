@@ -6,7 +6,7 @@ from models.sbfw import SBFW_protected, SBFW_no_protected
 from standard_funcs.helpers import *
 from standard_funcs.randomized_classifiers import get_confusion_matrix_final_loss
 
-def SBFW(X_train, y_train, X_test, y_test, loss_name, constraint_name, lambda_val, epsilon, eta_t_array, T, alt_loss=False):
+def SBFW(X_train, y_train, X_test, y_test, loss_name, constraint_name, lambda_val=1, epsilon=0.05, eta_t_array=[0.5, 0.4, 0.3, 0.1], T=500, alt_loss=False):
     y_train.astype(int)
     y_test.astype(int)
     vec_eta_1 = get_vec_eta_1(X_train, y_train)
