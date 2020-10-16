@@ -36,3 +36,7 @@ We provide a function _SBFW_ that can be imported from algorithm.SBFW. It takes 
 ```python
 loss_train, loss_test, constraint_value_train, constraint_value_test = SBFW(X_train, y_train, X_test, y_test, "gmean", "EOpp", lambda_val, epsilon, eta_t_array, T)
 ```
+
+We also provide the codes for various baseline methods that we compared with in the paper. For more details about the baseline methods please refer to their respective Repositories.
+[Three Player](https://papers.nips.cc/paper/9258-optimizing-generalized-rate-metrics-with-three-players)
+[COCO](https://github.com/hnarasimhan/constrained-classification)
