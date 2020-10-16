@@ -96,89 +96,94 @@ def compute_qmean_conf(confusion_matrix, Y_label):
     pi_1 = 1 - pi_0
     return np.sqrt(0.5*((1 - confusion_matrix[0][0]/pi_0)**2 + (1 - confusion_matrix[1][1]/pi_1)**2))
 
-# def compute_DP(Y_label, Y_pred, X_pro_feature):
-#     final_conf = np.zeros(shape=(2, 2))
-#     cm = []
-#     unique_a = len(np.unique(X_pro_feature))
+def compute_DP(Y_label, Y_pred, X_pro_feature):
+    final_conf = np.zeros(shape=(2, 2))
+    cm = []
+    unique_a = len(np.unique(X_pro_feature))
     
-#     for a in np.unique(X_pro_feature).astype(int):
-#         indices_a = X_pro_feature == a
-#         Y_label_a = Y_label[indices_a]
-#         Y_pred_a = Y_pred[indices_a]
-#         cm_a = get_confusion_matrix(Y_label_a, Y_pred_a)
-#         final_conf += cm_a
-#         cm.append(cm_a)
+    for a in np.unique(X_pro_feature).astype(int):
+        indices_a = X_pro_feature == a
+        Y_label_a = Y_label[indices_a]
+        Y_pred_a = Y_pred[indices_a]
+        cm_a = get_confusion_matrix(Y_label_a, Y_pred_a)
+        final_conf += cm_a
+        cm.append(cm_a)
     
-#     parity_per_a = np.zeros(unique_a)
+    parity_per_a = np.zeros(unique_a)
     
-#     for i in range(unique_a):
-#         cm_a = cm[i]
-#         parity_per_a[i] = abs(cm_a[0, 1] + cm_a[1, 1] - (1/unique_a)*(final_conf[0, 1] + final_conf[1, 1]))
+    for i in range(unique_a):
+        cm_a = cm[i]
+        parity_per_a[i] = abs(cm_a[0, 1] + cm_a[1, 1] - (1/unique_a)*(final_conf[0, 1] + final_conf[1, 1]))
     
-#     return max(parity_per_a)
+    return max(parity_per_a)
 
-# def compute_equal_odds(Y_label, Y_pred, X_pro_feature):
-#     final_conf = np.zeros(shape=(n_class, n_class))
-#     cm = []
-#     unique_a = len(np.unique(X_pro_feature))
+def compute_EOdds(Y_label, Y_pred, X_pro_feature):
+    n_class = 2
+    final_conf = np.zeros(shape=(n_class, n_class))
+    cm = []
+    unique_a = len(np.unique(X_pro_feature))
     
-#     for a in np.unique(X_pro_feature).astype(int):
-#         indices_a = X_pro_feature == a
-#         Y_label_a = Y_label[indices_a]
-#         Y_pred_a = Y_pred[indices_a]
-#         cm_a = get_confusion_matrix(Y_label_a, Y_pred_a)
-#         final_conf += cm_a
-#         cm.append(cm_a)
+    for a in np.unique(X_pro_feature).astype(int):
+        indices_a = X_pro_feature == a
+        Y_label_a = Y_label[indices_a]
+        Y_pred_a = Y_pred[indices_a]
+        cm_a = get_confusion_matrix(Y_label_a, Y_pred_a)
+        final_conf += cm_a
+        cm.append(cm_a)
     
-#     odds_per_a_0 = np.zeros(unique_a)
-#     odds_per_a_1 = np.zeros(unique_a)
+    odds_per_a_0 = np.zeros(unique_a)
+    odds_per_a_1 = np.zeros(unique_a)
     
-#     for i in range(unique_a):
-#         cm_a = cm[i]
-#         odds_per_a_0[i] = abs(cm_a[0, 1] - (1/unique_a)*(final_conf[0, 1]))
-#         odds_per_a_1[i] = abs(cm_a[1, 1] - (1/unique_a)*(final_conf[1, 1]))
+    for i in range(unique_a):
+        cm_a = cm[i]
+        odds_per_a_0[i] = abs(cm_a[0, 1] - (1/unique_a)*(final_conf[0, 1]))
+        odds_per_a_1[i] = abs(cm_a[1, 1] - (1/unique_a)*(final_conf[1, 1]))
     
-#     return max(max(odds_per_a_0), max(odds_per_a_1))
+    return max(max(odds_per_a_0), max(odds_per_a_1))
 
-# def compute_EOpp(Y_label, Y_pred, X_pro_feature):
-#     final_conf = np.zeros(shape=(n_class, n_class))
-#     cm = []
-#     unique_a = len(np.unique(X_pro_feature))
-    
-#     for a in np.unique(X_pro_feature).astype(int):
-#         indices_a = X_pro_feature == a
-#         Y_label_a = Y_label[indices_a]
-#         Y_pred_a = Y_pred[indices_a]
-#         cm_a = get_confusion_matrix(Y_label_a, Y_pred_a)
-#         final_conf += cm_a
-#         cm.append(cm_a)
-#     odds_per_a_1 = np.zeros(unique_a)
-    
-#     for i in range(unique_a):
-#         cm_a = cm[i]
-#         odds_per_a_1[i] = abs(cm_a[1, 1] - (1/unique_a)*(final_conf[1, 1]))
-    
-#     return max(odds_per_a_1)
+def compute_KLD(Y_label, Y_pred):
+    n_class = 2
+    cm = get_confusion_matrix(Y_label, Y_pred)
+    pi_array = []
+    for i in range(n_class):
+        pi_a = np.count_nonzero(Y_label == i)
+        pi_array.append(pi_a/len(Y_label))
 
-# def compute_KLD(Y_label, Y_pred):
-#     cm = get_confusion_matrix(Y_label, Y_pred)
-#     pi_array = []
-#     for i in range(n_class):
-#         pi_a = np.count_nonzero(Y_label == i)
-#         pi_array.append(pi_a/len(Y_label))
-
-#     kld_error = 0
-#     for i in range(n_class):
-#         sum_col_i = 0
-#         for j in range(n_class):
-#             sum_col_i += cm[j, i]
-#         kld_error += pi_array[i]*np.log(pi_array[i]/sum_col_i)
+    kld_error = 0
+    for i in range(n_class):
+        sum_col_i = 0
+        for j in range(n_class):
+            sum_col_i += cm[j, i]
+        kld_error += pi_array[i]*np.log(pi_array[i]/sum_col_i)
     
-#     return kld_error
+    return kld_error
 
-# def compute_COV(Y_label, Y_pred):
-#     cm = get_confusion_matrix(Y_label, Y_pred)
-#     return cm[0, 1] + cm[1, 1]
+def compute_COV(Y_label, Y_pred):
+    n_class = 2
+    cm = get_confusion_matrix(Y_label, Y_pred)
+    return cm[0, 1] + cm[1, 1]
+
+def compute_EOpp(Y_label, Y_pred, X_pro_feature):
+    n_class = 2
+    final_conf = np.zeros(shape=(n_class, n_class))
+    cm = []
+    unique_a = len(np.unique(X_pro_feature))
+    
+    for a in np.unique(X_pro_feature).astype(int):
+        indices_a = X_pro_feature == a
+        Y_label_a = Y_label[indices_a]
+        Y_pred_a = Y_pred[indices_a]
+        cm_a = get_confusion_matrix(Y_label_a, Y_pred_a)
+        cm_a = cm_a/(cm_a[1, 0] + cm_a[1, 1])
+        final_conf += cm_a
+        cm.append(cm_a)
+    odds_per_a_1 = np.zeros(unique_a)
+    
+    for i in range(unique_a):
+        cm_a = cm[i]
+        odds_per_a_1[i] = abs(cm_a[1, 1] - (1/unique_a)*(final_conf[1, 1]))
+    
+    return max(odds_per_a_1)
 
 def compute_DP_cms(cms, unique_a):
     final_conf = np.sum(cms, axis=0)
@@ -203,6 +208,8 @@ def compute_EOdds_cms(cms, unique_a):
     return max(max(odds_per_a_0), max(odds_per_a_1))
 
 def compute_EOpp_cms(cms, unique_a):
+    for i in range(unique_a):
+        cms[i] = cms[i]/(cms[i][1, 0] + cms[i][1, 1])
     final_conf = np.sum(cms, axis=0)
     odds_per_a_1 = np.zeros(unique_a)
     
@@ -226,5 +233,5 @@ def compute_KLD_conf(confusion_matrix, Y_label):
     return kld_error
 
 def compute_COV_conf(confusion_matrix):
-    return confusion_matrix[0, 0] + confusion_matrix[1, 1]
+    return confusion_matrix[0, 1] + confusion_matrix[1, 1]
 

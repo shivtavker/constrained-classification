@@ -76,7 +76,7 @@ def LMO_EOdds(grad_matrix, unique_a, epsilon):
         answer.append(soln_shape_4[i].reshape((2, 2)))
     return answer
 
-def LMO_EOpp(grad_matrix, unique_a, epsilon):
+def LMO_EOpp(grad_matrix, unique_a, epsilon, ratio):
     grad_array = []
     for i in range(unique_a):
         grad_a = np.matrix.flatten(np.array(grad_matrix[i]))
@@ -84,16 +84,22 @@ def LMO_EOpp(grad_matrix, unique_a, epsilon):
 
     c = np.matrix.flatten(np.array(grad_array))
     common_sub_1 = (1/unique_a)*get_row(np.arange(unique_a), [3], unique_a)
-    
+    for i in range(unique_a):
+        common_sub_1[(4*i)+3] = common_sub_1[(4*i)+3]/ratio[i]
     A_ub = []
     
     for i in range(unique_a):
-        row_a3 = get_row([i], [3], unique_a) - common_sub_1
+        row_a3 = (get_row([i], [3], unique_a)/ratio[i] - common_sub_1)
         row_a4 = -1*row_a3
         A_ub.append(row_a3)
         A_ub.append(row_a4)
         
-    b = np.array([epsilon]*len(A_ub))
+    # b = np.array([epsilon*ratio[i], epsilon*ratio[i] for i in range(unique_a)])
+    b = []
+    for i in range(unique_a):
+        b.append(epsilon)
+        b.append(epsilon)
+    b = np.array(b)
     
     A_ub = np.array(A_ub)
     

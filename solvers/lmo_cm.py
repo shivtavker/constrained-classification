@@ -32,3 +32,20 @@ def LMO_CM_no_protected(grad_matrix, X_train, y_train, vec_eta_1):
 
     """
     return (get_confusion_matrix_from_loss_no_a(grad_matrix, X_train, y_train, vec_eta_1), grad_matrix)
+
+def LMO_CM_threshold(grad_matrix, X_train, y_train, vec_eta_1):
+    """
+    LMO for set of achievable Confusion Matrix without protected attribute
+
+    Args:
+        grad_matrix : shape n x n x unique_a
+        unique_a: int
+        epsilon: int
+
+    Returns:
+        (confusion_matrix, Loss_matrix to store clfs)
+
+    """
+    L_t = grad_matrix
+    threshold = (L_t[0,0] - L_t[0,1])/(L_t[0,0] + L_t[1,1] - L_t[0,1] - L_t[1,0])
+    return (get_confusion_matrix_from_loss_no_a(grad_matrix, X_train, y_train, vec_eta_1), threshold)

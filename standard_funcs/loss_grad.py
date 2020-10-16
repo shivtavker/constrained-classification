@@ -52,10 +52,10 @@ class Loss_Grad_protected():
                 grad_c_a11_cm = (1/self.pi_1)*((sum_c11_cm/self.pi_1) - 1)*multiplicative_factor
                 grad_c_a11_fair = (1/self.pi_1)*((sum_c11_fair/self.pi_1) - 1)*multiplicative_factor
             elif(self.loss_name=="linear"):
-                grad_c_a00_cm = multiplicative_factor
-                grad_c_a00_fair = multiplicative_factor
-                grad_c_a11_cm = multiplicative_factor
-                grad_c_a11_fair = multiplicative_factor
+                grad_c_a00_cm = -multiplicative_factor
+                grad_c_a00_fair = -multiplicative_factor
+                grad_c_a11_cm = -multiplicative_factor
+                grad_c_a11_fair = -multiplicative_factor
 
             grad_array_a.append(
                 [grad_c_a00_cm, grad_c_a01_cm, grad_c_a10_cm, grad_c_a11_cm,
@@ -112,10 +112,10 @@ class Loss_Grad_no_protected():
             grad_c_11_cm = (1/self.pi_1)*((c_11_cm/self.pi_1) - 1)
             grad_c_11_fair = (1/self.pi_1)*((c_11_fair/self.pi_1) - 1)
         elif(self.loss_name=="linear"):
-            grad_c_00_cm = 1
-            grad_c_00_fair = 1
-            grad_c_11_cm = 1
-            grad_c_11_fair = 1
+            grad_c_00_cm = -1
+            grad_c_00_fair = -1
+            grad_c_11_cm = -1
+            grad_c_11_fair = -1
 
         grad_array = [grad_c_00_cm, grad_c_01_cm, grad_c_10_cm, grad_c_11_cm, grad_c_00_fair, grad_c_01_fair, grad_c_10_fair, grad_c_11_fair]
         return np.array(grad_array).T

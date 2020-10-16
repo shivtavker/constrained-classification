@@ -34,7 +34,7 @@ def get_confusion_matrix_from_loss_a(L_t_array, X_train, y_train, unique_a, prot
         confusion_matrix_a = confusion_matrix_a/len(Y_pred)
         confusion_matrices.append(confusion_matrix_a)
     
-    return confusion_matrices
+    return np.array(confusion_matrices)
 
 def get_confusion_matrix_from_loss_no_a(L_t, X_train, y_train, vec_eta_1):
     confusion_matrix = np.zeros(shape=(2, 2))
